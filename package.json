@@ -1,0 +1,25 @@
+{
+  "name": "web_assets",
+  "version": "0.0.1",
+  "main": "",
+  "description": "share web assets",
+  "author": "James Lal",
+
+  "dependencies" : {
+    "test-agent": "0.7.1"
+  },
+
+  "scripts": {
+    "test": ""
+  },
+
+  "devDependencies": {
+    "mocha": "~1.1",
+    "chai": "~1.0"
+  },
+
+  "license": "MIT",
+  "engine": {
+    "node": ">=0.4"
+  }
+}

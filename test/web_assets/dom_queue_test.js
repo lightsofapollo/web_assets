@@ -5,9 +5,8 @@ suite('dom_queue', function() {
   var subject;
 
   setup(function() {
-    subject = WebAssets.DomQueue;
+    subject = new WebAssets.DomQueue();
     subject.state = '';
-    subject._queue = [];
   });
 
   suite('#queue', function() {

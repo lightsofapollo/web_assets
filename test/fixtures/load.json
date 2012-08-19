@@ -1,0 +1,11 @@
+{
+  "css": [
+    "../test/fixtures/file.css",
+    "../test/fixtures/file1.css"
+  ],
+
+  "js": [
+    "../test/fixtures/file.js",
+    "../test/fixtures/file1.js"
+  ]
+}

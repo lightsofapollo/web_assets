@@ -4,6 +4,11 @@ VENDOR=./vendor/
 LIB_ROOT=./lib/web_assets/
 
 .PHONY: package
+JS_ASSETS=lib/web_assets/index.js \
+					lib/web_assets/config.js \
+					lib/web_assets/loader.js \
+					lib/web_assets/dom_queue.js
+
 package: test-agent-config
 	rm -Rf $(VENDOR)/
 	rm -f $(WEB_FILE)
@@ -14,6 +19,8 @@ package: test-agent-config
 	cp ./node_modules/chai/chai.js $(VENDOR)
 	cp ./node_modules/test-agent/test-agent.js $(VENDOR)
 	cp ./node_modules/test-agent/test-agent.css $(VENDOR)
+
+	cat $(JS_ASSETS) >> $(WEB_FILE)
 
 TEST_AGENT_CONFIG=./test-agent/config.json
 test-agent-config:
@@ -39,3 +46,6 @@ test-agent-config:
 test-server:
 	./node_modules/test-agent/bin/js-test-agent server --growl
 
+.PHONY: test-browser
+test-browser:
+	./node_modules/test-agent/bin/js-test-agent test

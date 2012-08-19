@@ -2,26 +2,15 @@ testSupport.lib('loader');
 
 suite('loader', function() {
   var subject;
+  var path;
+  var getScript;
+  var getLink;
 
-  function path(file) {
-    return '../test/fixtures/' + file;
-  }
-
-  function getScript(file) {
-    var el = document.querySelector(
-      'script[src="' + path(file) + '"]'
-    );
-
-    return el;
-  }
-
-  function getLink(file) {
-    var el = document.querySelector(
-      'link[href="' + path(file) + '"]'
-    );
-
-    return el;
-  }
+  suiteSetup(function() {
+    path = testSupport.path;
+    getScript = testSupport.getScript;
+    getLink = testSupport.getLink;
+  });
 
   setup(function() {
     subject = new WebAssets.Loader();

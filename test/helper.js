@@ -56,6 +56,29 @@
     testSupport.require('/test/support/' + lib);
   }
 
+  testSupport.path = function path(file) {
+    return '../test/fixtures/' + file;
+  }
+
+  testSupport.getScript = function getScript(file) {
+    console.log()
+    var el = document.querySelector(
+      'script[src="' + testSupport.path(file) + '"]'
+    );
+
+    return el;
+  }
+
+  testSupport.getLink = function getLink(file) {
+    var el = document.querySelector(
+      'link[href="' + testSupport.path(file) + '"]'
+    );
+
+    return el;
+  }
+
+
+
   testSupport.lib('index');
 
 }());

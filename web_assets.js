@@ -265,7 +265,8 @@ WebAssets.DomQueue = (function() {
 
   DomQueue.prototype = {
     init: function() {
-      if (document.readyState === 'complete') {
+      var state = document.readyState;
+      if (state === 'complete' || state === 'interactive') {
         this.fireQueue();
       } else {
         window.addEventListener(

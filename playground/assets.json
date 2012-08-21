@@ -1,0 +1,12 @@
+{
+  "css": [
+    "http://telefonicaid.github.com/Gaia-UI-Building-Blocks/fonts.css",
+    "http://telefonicaid.github.com/Gaia-UI-Building-Blocks/other/headers/style.css"
+  ],
+
+  "js": [
+  ],
+
+  "cssTarget": "style.css",
+  "jsTarget": "app.js"
+}

@@ -60,6 +60,14 @@ suite('build/asset', function() {
 
   });
 
+  test('#banner', function() {
+    var out = subject.banner();
+    expected = '/*\n* web asset generated css file.\n';
+    expected += '* Do not directly the contents.\n*/\n';
+
+    assert.equal(out, expected);
+  });
+
   suite('#process', function() {
     suite('simple concat', function() {
       testSupport.verifyBasicProcess(function() {

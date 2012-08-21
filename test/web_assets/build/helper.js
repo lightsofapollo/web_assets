@@ -59,6 +59,7 @@ global.testSupport = {
       var joinWith = asset.outputJoin;
 
       expected = [];
+
       files.forEach(function(file) {
         var path = fsPath.resolve(asset.build.root, file);
         var content = fs.readFileSync(file);
@@ -66,6 +67,7 @@ global.testSupport = {
         expected.push(content);
       });
       expected = expected.join(joinWith);
+      expected = asset.banner() + expected;
     });
 
     setup(unlink);

@@ -10,7 +10,7 @@ suite('build/css', function() {
   var build;
 
   function path(name) {
-    return __dirname + '/./fixtures/' + (name || '');
+    return __dirname + '/fixtures/' + (name || '');
   }
 
   setup(function() {
@@ -31,6 +31,29 @@ suite('build/css', function() {
   test('initialization', function() {
     assert.instanceOf(subject, Asset);
     assert.equal(subject.build, build);
+  });
+
+  suite('#_copyImage', function() {
+
+    test('nested dir', function(done) {
+      var details = {
+        from: path('one.css'),
+        to: 'my/other/thing/one.css'
+      };
+
+      var out = path('out/' + details.to);
+
+      subject._copyImage(details, function() {
+        console.log(out);
+        assert.isTrue(fs.existsSync(out));
+        var content = fs.readFileSync(out);
+        assert.equal(content, fs.readFileSync(
+          details.from
+        ));
+        done();
+      });
+    });
+
   });
 
   suite('#_findAndResolveImages', function() {

@@ -3,7 +3,16 @@ var WebAssets = (function() {
   function Asset(file) {
     var config = new WebAssets.Config(file);
     var loader = new WebAssets.Loader();
+    var dom = new WebAssets.DomQueue();
+
     var self = this;
+
+    function load() {
+      loader.load(function(err) {
+        if (self.oncomplete)
+          self.oncomplete();
+      });
+    }
 
     loader.onerror = function() {
       if (self.onerror) {
@@ -20,10 +29,7 @@ var WebAssets = (function() {
         loader.js(item);
       });
 
-      loader.load(function(err) {
-        if (self.oncomplete)
-          self.oncomplete();
-      });
+      dom.queue(load);
     }
   }
 
@@ -228,10 +234,12 @@ WebAssets.Loader = (function() {
 }());
 WebAssets.DomQueue = (function() {
 
-  return {
-    state: document.readyState,
-    _queue: [],
+  function DomQueue() {
+    this.state = document.readyState;
+    this._queue = [];
+  }
 
+  DomQueue.prototype = {
     init: function() {
       window.addEventListener(
         'DOMContentLoaded', this, false
@@ -264,6 +272,6 @@ WebAssets.DomQueue = (function() {
     }
   };
 
-
+  return DomQueue;
 
 }());

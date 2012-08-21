@@ -10,6 +10,7 @@ JS_ASSETS=lib/web_assets/index.js \
 					lib/web_assets/dom_queue.js
 
 package: test-agent-config
+	mkdir -p $(VENDOR)
 	rm -f $(WEB_FILE)
 	touch $(WEB_FILE)
 	cp ./node_modules/mocha/mocha.js $(VENDOR)

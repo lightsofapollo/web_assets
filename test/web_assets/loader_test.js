@@ -31,6 +31,18 @@ suite('loader', function() {
     });
   });
 
+  suite('#assetOptions', function() {
+    test('as string', function() {
+      var result = subject.assetOptions('foo.js');
+      assert.equal(result.src, 'foo.js');
+    });
+
+    test('as object', function() {
+      var obj = { src: 'foo.js', data: true };
+      assert.deepEqual(subject.assetOptions(obj), obj);
+    });
+  });
+
   test('#css', function() {
     subject.css('/foo.css');
     assert.deepEqual(

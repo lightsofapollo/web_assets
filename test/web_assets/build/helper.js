@@ -86,7 +86,7 @@ global.testSupport = {
         try {
           assert.equal(output, expected);
           assert.equal(calledWith.length, 2);
-        } catch(e) {
+        } catch (e) {
           done(e);
           return;
         }

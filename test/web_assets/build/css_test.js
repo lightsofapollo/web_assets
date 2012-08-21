@@ -35,6 +35,15 @@ suite('build/css', function() {
 
   suite('#_copyImage', function() {
 
+    function cleanup() {
+      var file = path('out/my');
+      if (fs.existsSync(file))
+        fs.rmdirSync(file);
+    }
+
+    setup(cleanup);
+    teardown(cleanup);
+
     test('nested dir', function(done) {
       var details = {
         from: path('one.css'),
@@ -44,7 +53,6 @@ suite('build/css', function() {
       var out = path('out/' + details.to);
 
       subject._copyImage(details, function() {
-        console.log(out);
         assert.isTrue(fs.existsSync(out));
         var content = fs.readFileSync(out);
         assert.equal(content, fs.readFileSync(
@@ -57,6 +65,22 @@ suite('build/css', function() {
   });
 
   suite('#_findAndResolveImages', function() {
+
+    test('data uri', function() {
+      var domain = '/';
+      source = '\n';
+      source += 'url(\'data:foo\')';
+      source += 'url(data:foo)';
+      source += 'url("data:foo)';
+
+      var output = subject._processSourceForImages(
+        domain,
+        source
+      );
+
+      assert.equal(output, source);
+      assert.deepEqual(subject._imagesToCopy, []);
+    });
 
     test('http url - no prefix', function() {
       var domain = 'http://google.com';

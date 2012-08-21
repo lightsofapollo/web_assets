@@ -47,6 +47,9 @@ test-server:
 
 .PHONY: test-node
 test-node:
+	@echo "Node support comming soon."
+	@exit 1;
+
 	./node_modules/mocha/bin/mocha \
 		--ui tdd \
 		--reporter $(REPORTER) \

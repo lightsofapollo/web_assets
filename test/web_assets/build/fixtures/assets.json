@@ -1,0 +1,14 @@
+{
+  "css": [
+    "two.css",
+    "one.css"
+  ],
+
+  "js": [
+    "one.js",
+    "two.js"
+  ],
+
+  "cssTarget": "out/build.css",
+  "jsTarget": "out/build.js"
+}

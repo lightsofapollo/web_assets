@@ -2,7 +2,7 @@ var fs = require('fs');
 var fsPath = require('path');
 var Build = requireLib('build/index');
 var Asset = requireLib('build/asset');
-var JS = requireLib('build/css');
+var JS = requireLib('build/js');
 
 suite('build/js', function() {
 
@@ -16,12 +16,12 @@ suite('build/js', function() {
   setup(function() {
     build = new Build(
       path(), {
-        css: [
+        js: [
           path('one.css'),
           path('two.css')
         ],
 
-        cssTarget: 'out/build.css'
+        jsTarget: 'out/build.css'
       }
     );
 
@@ -30,7 +30,10 @@ suite('build/js', function() {
 
   test('initialization', function() {
     assert.instanceOf(subject, Asset);
+    assert.instanceOf(subject, JS);
+
     assert.equal(subject.build, build);
+    assert.equal(subject.outputJoin, '\n;');
   });
 
   suite('#process', function() {
@@ -45,7 +48,7 @@ suite('build/js', function() {
       var out = path('out/build.css');
 
       expected += fs.readFileSync(path('one.css'));
-      expected += '\n';
+      expected += subject.outputJoin;
       expected += fs.readFileSync(path('two.css'));
 
       subject.postProcessAsset = function() {
@@ -56,8 +59,13 @@ suite('build/js', function() {
 
       subject.process(function() {
         var output = fs.readFileSync(out);
-        assert.equal(output, expected);
-        assert.equal(calledWith.length, 2);
+        try {
+          assert.equal(output, expected);
+          assert.equal(calledWith.length, 2);
+        } catch (e) {
+          done(e);
+          return;
+        }
         done();
       });
     });

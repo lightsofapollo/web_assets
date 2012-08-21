@@ -62,19 +62,20 @@ suite('build/asset', function() {
 
   suite('#process', function() {
     var calledWith;
+    var expected;
+    var out;
 
     setup(function() {
       calledWith = [];
+      expected = '';
+      out = path('out/build.css');
+
+      expected += fs.readFileSync(path('one.css'));
+      expected += subject.outputJoin;
+      expected += fs.readFileSync(path('two.css'));
     });
 
     test('simple concat', function(done) {
-      var expected = '';
-      var out = path('out/build.css');
-
-      expected += fs.readFileSync(path('one.css'));
-      expected += '\n';
-      expected += fs.readFileSync(path('two.css'));
-
       subject.postProcessAsset = function() {
         var cb = arguments[arguments.length - 1];
         calledWith.push(arguments);

@@ -3,16 +3,7 @@ var WebAssets = (function() {
   function Asset(file) {
     var config = new WebAssets.Config(file);
     var loader = new WebAssets.Loader();
-    var dom = new WebAssets.DomQueue();
-
     var self = this;
-
-    function load() {
-      loader.load(function(err) {
-        if (self.oncomplete)
-          self.oncomplete();
-      });
-    }
 
     loader.onerror = function() {
       if (self.onerror) {
@@ -29,7 +20,10 @@ var WebAssets = (function() {
         loader.js(item);
       });
 
-      dom.queue(load);
+      loader.load(function(err) {
+        if (self.oncomplete)
+          self.oncomplete();
+      });
     }
   }
 
@@ -234,12 +228,10 @@ WebAssets.Loader = (function() {
 }());
 WebAssets.DomQueue = (function() {
 
-  function DomQueue() {
-    this.state = document.readyState;
-    this._queue = [];
-  }
+  return {
+    state: document.readyState,
+    _queue: [],
 
-  DomQueue.prototype = {
     init: function() {
       window.addEventListener(
         'DOMContentLoaded', this, false
@@ -272,6 +264,14 @@ WebAssets.DomQueue = (function() {
     }
   };
 
-  return DomQueue;
 
 }());
+
+(function(window) {
+  var asset = new WebAssets('/playground/assets.json');
+
+  asset.oncomplete = function() {
+    document.body.removeAttribute('hidden');
+  }
+
+}(this));

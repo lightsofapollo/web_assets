@@ -1,4 +1,4 @@
-REPORTER=spec
+REPORTER=Spec
 WEB_FILE=web_assets.js
 VENDOR=./vendor/
 LIB_ROOT=./lib/web_assets/
@@ -10,10 +10,8 @@ JS_ASSETS=lib/web_assets/index.js \
 					lib/web_assets/dom_queue.js
 
 package: test-agent-config
-	rm -Rf $(VENDOR)/
 	rm -f $(WEB_FILE)
 	touch $(WEB_FILE)
-	mkdir $(VENDOR)
 	cp ./node_modules/mocha/mocha.js $(VENDOR)
 	cp ./node_modules/mocha/mocha.css $(VENDOR)
 	cp ./node_modules/chai/chai.js $(VENDOR)
@@ -28,7 +26,7 @@ test-agent-config:
 	@touch $(TEST_AGENT_CONFIG)
 	@rm -f /tmp/test-agent-config;
 	# Build json array of all test files
-	for d in test/; \
+	for d in test; \
 	do \
 		find $$d -name '*_test.js' | sed "s:$$d/:/$$d/:g"  >> /tmp/test-agent-config; \
 	done;
@@ -45,6 +43,32 @@ test-agent-config:
 .PHONY: test-server
 test-server:
 	./node_modules/test-agent/bin/js-test-agent server --growl
+
+.PHONY: test-node
+test-node:
+	./node_modules/mocha/bin/mocha \
+		--ui tdd \
+		--reporter $(REPORTER) \
+		--growl \
+		test/web_assets/build/helper.js test/web_assets/build/*_test.js
+
+.PHONY: test-xpc
+TESTS=`find test/web_assets/build -name '*_test.js'`
+test-xpc:
+	./node_modules/xpcwindow/bin/xpcwindow-mocha \
+		--ui tdd \
+		--reporter $(REPORTER) \
+		test/web_assets/build/helper.js $(TESTS)
+
+.PHONY: watch
+FILES=
+watch:
+	./node_modules/mocha/bin/mocha \
+		--ui tdd \
+		--reporter $(REPORTER) \
+		--watch \
+		--growl \
+		test/build/helper.js $(FILES)
 
 .PHONY: test-browser
 test-browser:

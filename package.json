@@ -6,7 +6,8 @@
   "author": "James Lal",
 
   "dependencies" : {
-    "test-agent": "0.7.1"
+    "test-agent": "0.7.1",
+    "xpcwindow": "0.3.1"
   },
 
   "scripts": {
@@ -15,7 +16,8 @@
 
   "devDependencies": {
     "mocha": "~1.0",
-    "chai": "~1.0"
+    "chai": "0.5.2",
+    "xmlhttprequest": "~1.4"
   },
 
   "license": "MIT",

@@ -61,35 +61,11 @@ suite('build/asset', function() {
   });
 
   suite('#process', function() {
-    var calledWith;
-    var expected;
-    var out;
-
-    setup(function() {
-      calledWith = [];
-      expected = '';
-      out = path('out/build.css');
-
-      expected += fs.readFileSync(path('one.css'));
-      expected += subject.outputJoin;
-      expected += fs.readFileSync(path('two.css'));
-    });
-
-    test('simple concat', function(done) {
-      subject.postProcessAsset = function() {
-        var cb = arguments[arguments.length - 1];
-        calledWith.push(arguments);
-        cb(null, arguments[0]);
-      }
-
-      subject.process(function() {
-        var output = fs.readFileSync(out);
-        assert.equal(output, expected);
-        assert.equal(calledWith.length, 2);
-        done();
+    suite('simple concat', function() {
+      testSupport.verifyBasicProcess(function() {
+        return subject;
       });
     });
-
   });
 
   suite('#assetOptions', function() {

@@ -13,13 +13,16 @@ suite('build', function() {
 
   function cleanupFiles() {
     if (fs.existsSync(out.js)) {
-      fs.unlink(out.js);
+      fs.unlinkSync(out.js);
     }
 
     if (fs.existsSync(out.css)) {
-      fs.unlink(out.css);
+      fs.unlinkSync(out.css);
     }
   }
+
+  setup(cleanupFiles);
+  teardown(cleanupFiles);
 
   suite('run', function() {
     var expectedJS = [];

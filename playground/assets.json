@@ -1,9 +1,14 @@
 {
   "css": [
+    "style/custom.css",
     "http://telefonicaid.github.com/Gaia-UI-Building-Blocks/fonts.css",
     {
       "src": "http://telefonicaid.github.com/Gaia-UI-Building-Blocks/other/headers/style.css",
-      "prefix": "building-blocks/"
+      "prefix": "building-blocks/",
+      "inverseGrep": [
+        "theme=\"dark\"",
+        "theme=\"overlay\""
+      ]
     }
   ],
 

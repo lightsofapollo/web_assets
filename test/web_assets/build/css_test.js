@@ -64,6 +64,62 @@ suite('build/css', function() {
 
   });
 
+  suite('#_filterRules', function() {
+
+    // note that these are mostly
+    // sanity checks the deep logic & tests
+    // live in css_container
+
+    test('without only & grep', function() {
+      var input = '.a {}';
+      var out = subject._filterRules(input, {});
+      assert.equal(out, input);
+    });
+
+    test('property: only', function() {
+      var input = '.a {}\n .b {}';
+      var out = subject._filterRules(input, {
+        only: ['.a']
+      });
+
+      assert.ok(out);
+      assert.include(out, '.a');
+      assert.ok(
+        out.indexOf('.b') === -1,
+        'should remove .b selector'
+      );
+    });
+
+    test('property: inverseGrep', function() {
+      var input = '.a {}\n .FOO {}';
+      var out = subject._filterRules(input, {
+        inverseGrep: '([a-z]+)'
+      });
+
+      assert.ok(out);
+      assert.include(out, '.FOO');
+      assert.ok(
+        out.indexOf('.a') === -1,
+        'should remove .a selector'
+      );
+    });
+
+    test('property: grep', function() {
+      var input = '.a {}\n .FOO {}';
+      var out = subject._filterRules(input, {
+        grep: '([a-z]+)'
+      });
+
+      assert.ok(out);
+      assert.include(out, '.a');
+      assert.ok(
+        out.indexOf('.FOO') === -1,
+        'should remove .FOO selector'
+      );
+    });
+
+  });
+
   suite('#_findAndResolveImages', function() {
 
     test('data uri', function() {
@@ -81,6 +137,27 @@ suite('build/css', function() {
       assert.equal(output, source);
       assert.deepEqual(subject._imagesToCopy, []);
     });
+
+    test('local assets - no copying', function() {
+      var domain = 'style/';
+      source = '\n';
+      source += 'url(images/icon.png)';
+      source += 'url(ui/button.png)';
+
+      var output = subject._processSourceForImages(
+        domain,
+        source,
+        'hopefully-ignored'
+      );
+
+      var expected = '\n';
+      expected += 'url("style/images/icon.png")';
+      expected += 'url("style/ui/button.png")';
+
+      assert.equal(output, expected);
+      assert.deepEqual(subject._imagesToCopy, []);
+    });
+
 
     test('http url - no prefix', function() {
       var domain = 'http://google.com';

@@ -64,6 +64,48 @@ suite('build/css', function() {
 
   });
 
+  suite('#_filterRules', function() {
+
+    // note that these are mostly
+    // sanity checks the deep logic & tests
+    // live in css_container
+
+    test('without only & grep', function() {
+      var input = '.a {}';
+      var out = subject._filterRules(input, {});
+      assert.equal(out, input);
+    });
+
+    test('property: only', function() {
+      var input = '.a {}\n .b {}';
+      var out = subject._filterRules(input, {
+        only: ['.a']
+      });
+
+      assert.ok(out);
+      assert.include(out, '.a');
+      assert.ok(
+        out.indexOf('.b') === -1,
+        'should remove .b selector'
+      );
+    });
+
+    test('property: grep', function() {
+      var input = '.a {}\n .FOO {}';
+      var out = subject._filterRules(input, {
+        grep: '([a-z]+)'
+      });
+
+      assert.ok(out);
+      assert.include(out, '.a');
+      assert.ok(
+        out.indexOf('.FOO') === -1,
+        'should remove .FOO selector'
+      );
+    });
+
+  });
+
   suite('#_findAndResolveImages', function() {
 
     test('data uri', function() {

@@ -11,4 +11,16 @@ else
   DIR="$( cd "$( dirname "$SOURCE" )" && pwd )"
 fi
 
+which xpcwindow 2>&1 1> /dev/null
+if [ "$?" != "0" ]
+then
+  if [ -d $DIR/../node_modules/xpcwindow/bin ]
+  then
+    PATH=$DIR/../node_modules/xpcwindow/bin:$PATH
+  else
+    echo "xpcwindow is not installed please add it to your path (npm install -g xpcwindow)"
+    exit 1
+  fi
+fi
+
 xpcwindow $DIR/xpcwindow.js $@

@@ -59,8 +59,6 @@ test-node:
 .PHONY: test-xpc
 TESTS=`find test/web_assets/build -name '*_test.js'`
 test-xpc:
-	@PATH=$(PWD)/node_modules/xpcwindow/bin:$(PATH)
-
 	./node_modules/xpcwindow/bin/xpcwindow-mocha \
 		--ui tdd \
 		--reporter $(REPORTER) \

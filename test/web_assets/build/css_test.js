@@ -90,6 +90,20 @@ suite('build/css', function() {
       );
     });
 
+    test('property: inverseGrep', function() {
+      var input = '.a {}\n .FOO {}';
+      var out = subject._filterRules(input, {
+        inverseGrep: '([a-z]+)'
+      });
+
+      assert.ok(out);
+      assert.include(out, '.FOO');
+      assert.ok(
+        out.indexOf('.a') === -1,
+        'should remove .a selector'
+      );
+    });
+
     test('property: grep', function() {
       var input = '.a {}\n .FOO {}';
       var out = subject._filterRules(input, {

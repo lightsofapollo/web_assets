@@ -80,11 +80,27 @@ suite('build/css_container', function() {
       ruleAst = subject.ast.stylesheet.rules;
     });
 
+    test('#inverseGrep', function() {
+      subject.inverseGrep(/^\.(c|a)/);
+      assert.deepEqual(
+        rules(),
+        ['.b', '.d', '.e', '.f']
+      );
+    });
+
     test('#grep', function() {
       subject.grep(/^\.(c|a)/);
       assert.deepEqual(
         rules(),
         ['.a', '.c']
+      );
+    });
+
+    test('#inverseGrep - array string', function() {
+      subject.inverseGrep(['\.a', '\.c']);
+      assert.deepEqual(
+        rules(),
+        ['.b', '.d', '.e', '.f']
       );
     });
 
@@ -100,7 +116,8 @@ suite('build/css_container', function() {
       toRemove = ['.a', '.c'];
       subject.filter(filter);
 
-      assert.equal(ruleAst.length, 2);
+
+      assert.equal(ruleAst.length, 4);
       assert.deepEqual(
         ruleAst[0].selectors,
         ['.b']
@@ -111,7 +128,7 @@ suite('build/css_container', function() {
       toRemove = ['.b'];
       subject.filter(filter);
 
-      assert.equal(ruleAst.length, 2);
+      assert.equal(ruleAst.length, 4);
       assert.deepEqual(
         ruleAst[0].selectors,
         ['.a', '.c']
@@ -121,14 +138,16 @@ suite('build/css_container', function() {
 
     test('remove entire selector', function() {
       toRemove = [
-        '.a', '.b', '.c'
+        '.a', '.b', '.c', '.e', '.f'
       ];
 
       var expectedStr = ruleToString(
         ruleAst[1]
       );
 
+
       subject.filter(filter);
+
       assert.equal(ruleAst.length, 1);
       assert.deepEqual(
         ruleAst[0].selectors,

@@ -20,3 +20,7 @@ else
 	@# and using httpd to server a static copy....
 	../bin/web_assets install $(PWD)
 endif
+
+.PHONY: clean
+clean: 
+	rm -Rf building-blocks

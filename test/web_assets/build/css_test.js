@@ -138,6 +138,27 @@ suite('build/css', function() {
       assert.deepEqual(subject._imagesToCopy, []);
     });
 
+    test('local assets - no copying', function() {
+      var domain = 'style/';
+      source = '\n';
+      source += 'url(images/icon.png)';
+      source += 'url(ui/button.png)';
+
+      var output = subject._processSourceForImages(
+        domain,
+        source,
+        'hopefully-ignored'
+      );
+
+      var expected = '\n';
+      expected += 'url("style/images/icon.png")';
+      expected += 'url("style/ui/button.png")';
+
+      assert.equal(output, expected);
+      assert.deepEqual(subject._imagesToCopy, []);
+    });
+
+
     test('http url - no prefix', function() {
       var domain = 'http://google.com';
       source = '\n';

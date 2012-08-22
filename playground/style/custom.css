@@ -1,0 +1,7 @@
+#custom {
+  border: 1px solid #CCC;
+  font-size: 2rem;
+  text-align: center;
+  padding: 2rem;
+  background: url("icon/calendar.png") no-repeat right
+}

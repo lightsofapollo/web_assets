@@ -30,6 +30,7 @@ var WebAssets = (function() {
       });
 
       dom.queue(load);
+      dom.init();
     }
   }
 
@@ -117,6 +118,27 @@ WebAssets.Loader = (function() {
      */
     onerror: function() {},
 
+
+    /**
+     * Converts object or string into
+     * an assert object.
+     *
+     *  loader.assetOptions('foo.js');
+     *  // => { src: 'foo.js' }
+     *
+     *  loader.assetOptions({ src: 'foo.js' });
+     *  // => { src: 'foo.js' }
+     *
+     * @param {String|Object} input string or object.
+     * @return {Object} asset object definition.
+     */
+    assetOptions: function(input) {
+      if (typeof(input) === 'string') {
+        return { src: input };
+      }
+      return input;
+    },
+
     /**
      * Basic resource loading logic
      * for css & js.
@@ -177,7 +199,8 @@ WebAssets.Loader = (function() {
      * @return {Self} chainable.
      */
     css: function(item) {
-      this._cssAssets.push(item);
+      var opts = this.assetOptions(item);
+      this._cssAssets.push(opts.src);
       return this;
     },
 
@@ -188,7 +211,8 @@ WebAssets.Loader = (function() {
      * @return {Self} chainable.
      */
     js: function(item) {
-      this._jsAssets.push(item);
+      var opts = this.assetOptions(item);
+      this._jsAssets.push(opts.src);
       return this;
     },
 
@@ -241,9 +265,14 @@ WebAssets.DomQueue = (function() {
 
   DomQueue.prototype = {
     init: function() {
-      window.addEventListener(
-        'DOMContentLoaded', this, false
-      );
+      var state = document.readyState;
+      if (state === 'complete' || state === 'interactive') {
+        this.fireQueue();
+      } else {
+        window.addEventListener(
+          'DOMContentLoaded', this, false
+        );
+      }
     },
 
     handleEvent: function(e) {

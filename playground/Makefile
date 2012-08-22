@@ -8,7 +8,10 @@ all:
 ifeq ($(DEBUG),1)
 	rm -f style.css app.js
 	touch style.css
-	cp dev/web_assets.js app.js
+	touch app.js
+
+	cat ../web_assets.js >> app.js
+	cat dev/config.js >> app.js
 else
 	rm -f app.js style.css
 	@# Obviously there could be issues where the remote server

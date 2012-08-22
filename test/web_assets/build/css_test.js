@@ -10,7 +10,7 @@ suite('build/css', function() {
   var build;
 
   function path(name) {
-    return __dirname + '/./fixtures/' + (name || '');
+    return __dirname + '/fixtures/' + (name || '');
   }
 
   setup(function() {
@@ -31,6 +31,153 @@ suite('build/css', function() {
   test('initialization', function() {
     assert.instanceOf(subject, Asset);
     assert.equal(subject.build, build);
+  });
+
+  suite('#_copyImage', function() {
+
+    function cleanup() {
+      var file = path('out/my');
+      if (fs.existsSync(file))
+        fs.rmdirSync(file);
+    }
+
+    setup(cleanup);
+    teardown(cleanup);
+
+    test('nested dir', function(done) {
+      var details = {
+        from: path('one.css'),
+        to: 'my/other/thing/one.css'
+      };
+
+      var out = path('out/' + details.to);
+
+      subject._copyImage(details, function() {
+        assert.isTrue(fs.existsSync(out));
+        var content = fs.readFileSync(out);
+        assert.equal(content, fs.readFileSync(
+          details.from
+        ));
+        done();
+      });
+    });
+
+  });
+
+  suite('#_findAndResolveImages', function() {
+
+    test('data uri', function() {
+      var domain = '/';
+      source = '\n';
+      source += 'url(\'data:foo\')';
+      source += 'url(data:foo)';
+      source += 'url("data:foo)';
+
+      var output = subject._processSourceForImages(
+        domain,
+        source
+      );
+
+      assert.equal(output, source);
+      assert.deepEqual(subject._imagesToCopy, []);
+    });
+
+    test('http url - no prefix', function() {
+      var domain = 'http://google.com';
+      source = '\n';
+      source += '.foo {\n' + '  background: url(\'one.js\'); \n}\n';
+      source += '.bar {\n' + '  background: url("two.js")' + '\n}\n';
+      source += '.bar {\n  background: url(/foo/three.js)\n}\n';
+
+      var output = subject._processSourceForImages(
+        domain,
+        source
+      );
+
+      assert.equal(output, source);
+
+      var expected = [
+        { from: domain + '/one.js', to: 'one.js' },
+        { from: domain + '/two.js', to: 'two.js' },
+        { from: domain + '/foo/three.js', to: '/foo/three.js' }
+      ];
+
+      assert.deepEqual(
+        subject._imagesToCopy,
+        expected
+      );
+    });
+
+    test('absolute url - no prefix', function() {
+      var domain = '/Users';
+      source = '\n';
+      source += '.foo {\n' + '  background: url(\'one.js\'); \n}\n';
+      source += '.bar {\n' + '  background: url("two.js")' + '\n}\n';
+      source += '.bar {\n  background: url(/foo/three.js)\n}\n';
+
+      var output = subject._processSourceForImages(
+        domain,
+        source
+      );
+
+      var expected = [
+        { from: domain + '/one.js', to: 'one.js' },
+        { from: domain + '/two.js', to: 'two.js' },
+        { from: '/foo/three.js', to: '/foo/three.js' }
+      ];
+
+      assert.deepEqual(
+        subject._imagesToCopy,
+        expected
+      );
+    });
+
+    test('prefix http', function() {
+      var domain = 'http://cool.com/';
+      var input = 'url(foo.js)';
+      var out = subject._processSourceForImages(
+        domain,
+        input,
+        'cool'
+      );
+
+      assert.equal(
+        out,
+        'url("cool/foo.js")'
+      );
+
+      assert.deepEqual(
+        subject._imagesToCopy,
+        [
+          { from: domain + '/foo.js', to: 'cool/foo.js' }
+        ]
+      );
+    });
+
+    test('prefix local', function() {
+      var domain = '/root';
+      var input = 'url(./foo.js)';
+      var out = subject._processSourceForImages(
+        domain,
+        input,
+        'cool'
+      );
+
+      assert.equal(
+        out,
+        'url("cool/foo.js")'
+      );
+
+      assert.deepEqual(
+        subject._imagesToCopy,
+        [
+          { from: domain + '/foo.js', to: 'cool/foo.js' }
+        ]
+      );
+    });
+
+    test('integration', function() {
+    });
   });
 
   suite('#process', function() {

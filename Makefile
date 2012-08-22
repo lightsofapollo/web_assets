@@ -10,6 +10,7 @@ JS_ASSETS=lib/web_assets/index.js \
 					lib/web_assets/dom_queue.js
 
 package: test-agent-config
+	mkdir -p $(VENDOR)
 	rm -f $(WEB_FILE)
 	touch $(WEB_FILE)
 	cp ./node_modules/mocha/mocha.js $(VENDOR)
@@ -46,6 +47,9 @@ test-server:
 
 .PHONY: test-node
 test-node:
+	@echo "Node support comming soon."
+	@exit 1;
+
 	./node_modules/mocha/bin/mocha \
 		--ui tdd \
 		--reporter $(REPORTER) \
@@ -54,7 +58,7 @@ test-node:
 
 .PHONY: test-xpc
 TESTS=`find test/web_assets/build -name '*_test.js'`
-test-xpc:
+test-xpc: package
 	./node_modules/xpcwindow/bin/xpcwindow-mocha \
 		--ui tdd \
 		--reporter $(REPORTER) \

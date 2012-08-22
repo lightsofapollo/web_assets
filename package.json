@@ -7,7 +7,7 @@
 
   "dependencies" : {
     "test-agent": "0.7.1",
-    "xpcwindow": "0.3.1"
+    "xpcwindow": "0.4.2"
   },
 
   "scripts": {
